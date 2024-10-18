@@ -1,0 +1,102 @@
+'''
+Exercise 1:
+
+def sum_tuples(tup1, tup2):
+    if len(tup1) != len(tup2):
+        return "Error: Tuples must be of the same length"
+    
+    list1 = list(tup1)
+    list2 = list(tup2)
+    
+    summed_list = []
+
+    for i in range(len(list1)):
+        summed_list.append(list1[i] + list2[i])
+    
+    return tuple(summed_list)
+
+def export_json(dictionary, filename):
+    file = open(filename, 'w')
+    file.write("{\n")
+    i = 0
+    for key in dictionary:
+        value = dictionary[key]
+        comma = ",\n" if i < len(dictionary) - 1 else "\n"
+        file.write("    \"" + str(key) + "\": \"" + str(value) + "\"" + comma)
+        i += 1
+    file.write("}\n")
+    file.close()
+    print("Dictionary successfully written to " + filename)
+
+def import_json(filename):
+    try:
+        file = open(filename, 'r')
+        lines = file.readlines()
+        json_dict = {}
+        for line in lines[1:-1]:
+            line = line.strip()
+            line = line.replace('"', '')
+            key_value = line.split(": ")
+            key = key_value[0]
+            value = key_value[1].strip(",")
+            json_dict[key] = value
+        file.close()
+        return json_dict
+    except FileNotFoundError:
+        return "Error: File not found"
+
+def main():
+    while True:
+        print("\n1. Sum Tuples")
+        print("2. Export JSON")
+        print("3. Import JSON")
+        print("4. Exit")
+        choice = input("Enter a choice: ")
+
+        if choice == '1':
+            try:
+                tup1 = tuple(map(int, input("Enter first tuple (comma separated): ").split(',')))
+                tup2 = tuple(map(int, input("Enter second tuple (comma separated): ").split(',')))
+                result = sum_tuples(tup1, tup2)
+                print("Result:", result)
+            except ValueError:
+                print("Error: Invalid input, please enter integers.")
+        
+        elif choice == '2':
+            dictionary = {}
+            n = int(input("How many items in this dictionary? "))
+            for _ in range(n):
+                key = input("Enter key: ")
+                value = input("Enter value: ")
+                dictionary[key] = value
+            filename = input("Enter filename to save: ")
+            export_json(dictionary, filename)
+
+        elif choice == '3':
+            filename = input("Enter filename to read: ")
+            result = import_json(filename)
+            print("Imported Dictionary:", result)
+
+        elif choice == '4':
+            print("Exiting program.")
+            break
+        else:
+            print("Invalid choice. Please select again.")
+
+
+'''
+
+
+'''
+Exercise 2:
+
+a. O(N^3)
+b. O(N^3)
+c. O(N!)
+d. O(N log N)
+e. O(N)
+f. O(N^2)
+g. O(N^2)
+h. O(N!)
+
+'''
