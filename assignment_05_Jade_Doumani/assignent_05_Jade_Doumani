@@ -1,0 +1,135 @@
+'''
+import json
+
+class Course:
+    def __init__(self, code, name, credit_hours, course_type):
+        self.code = code
+        self.name = name
+        self.credit_hours = credit_hours
+        self.course_type = course_type  
+
+    def __str__(self):
+        return f"{self.code}: {self.name} ({self.credit_hours} credits, {self.course_type})"
+
+
+class Student:
+    def __init__(self, student_id, name):
+        self.student_id = student_id
+        self.name = name
+        self.enrolled_courses = {}  
+
+    def enroll(self, course):
+        if course.code in self.enrolled_courses:
+            raise Exception(f"Already enrolled in course: {course.code}")
+        self.enrolled_courses[course.code] = course
+
+    def drop(self, course_code):
+        if course_code not in self.enrolled_courses:
+            raise Exception(f"Course not found: {course_code}")
+        del self.enrolled_courses[course_code]
+
+    def list_courses(self):
+        return "\n".join(str(course) for course in self.enrolled_courses.values())
+
+
+class University:
+    def __init__(self):
+        self.course_catalog = {}  
+        self.students = {}  
+
+    def add_course(self, code, name, credit_hours, course_type):
+        if code in self.course_catalog:
+            raise Exception("Course code already exists in catalog.")
+        self.course_catalog[code] = Course(code, name, credit_hours, course_type)
+        print(f"Course '{name}' added successfully.")
+
+    def enroll_student(self, student_id, student_name, course_code):
+        if student_id not in self.students:
+            self.students[student_id] = Student(student_id, student_name)
+        student = self.students[student_id]
+        if course_code not in self.course_catalog:
+            raise Exception("Course not found in catalog.")
+        course = self.course_catalog[course_code]
+        student.enroll(course)
+        print(f"Student '{student_name}' enrolled in '{course.name}' successfully.")
+
+    def drop_course_for_student(self, student_id, course_code):
+        if student_id not in self.students:
+            raise Exception("Student not found.")
+        student = self.students[student_id]
+        student.drop(course_code)
+        print(f"Course '{course_code}' dropped for student '{student.name}'.")
+
+    def list_student_courses(self, student_id):
+        if student_id not in self.students:
+            raise Exception("Student not found.")
+        student = self.students[student_id]
+        return student.list_courses() or "No courses enrolled."
+
+    def save_course_catalog(self, filename):
+        data = {code: vars(course) for code, course in self.course_catalog.items()}
+        with open(filename, 'w') as file:
+            json.dump(data, file)
+        print("Course catalog saved successfully.")
+
+    def load_course_catalog(self, filename):
+        try:
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                for code, course_info in data.items():
+                    self.course_catalog[code] = Course(**course_info)
+            print("Course catalog loaded successfully.")
+        except FileNotFoundError:
+            print("File not found.")
+
+    def menu(self):
+        while True:
+            print("\nCourse Enrollment System Menu:")
+            print("1. Add Course")
+            print("2. Enroll Student in Course")
+            print("3. Drop Course for Student")
+            print("4. List Student Courses")
+            print("5. Save Course Catalog")
+            print("6. Load Course Catalog")
+            print("7. Exit")
+
+            choice = input("Enter your choice: ")
+
+            try:
+                if choice == "1":
+                    code = input("Enter course code: ")
+                    name = input("Enter course name: ")
+                    credit_hours = int(input("Enter credit hours: "))
+                    course_type = input("Enter course type (Core/Elective): ")
+                    self.add_course(code, name, credit_hours, course_type)
+                elif choice == "2":
+                    student_id = input("Enter student ID: ")
+                    student_name = input("Enter student name: ")
+                    course_code = input("Enter course code to enroll: ")
+                    self.enroll_student(student_id, student_name, course_code)
+                elif choice == "3":
+                    student_id = input("Enter student ID: ")
+                    course_code = input("Enter course code to drop: ")
+                    self.drop_course_for_student(student_id, course_code)
+                elif choice == "4":
+                    student_id = input("Enter student ID: ")
+                    print("Enrolled Courses:")
+                    print(self.list_student_courses(student_id))
+                elif choice == "5":
+                    filename = input("Enter filename to save catalog: ")
+                    self.save_course_catalog(filename)
+                elif choice == "6":
+                    filename = input("Enter filename to load catalog: ")
+                    self.load_course_catalog(filename)
+                elif choice == "7":
+                    print("Exiting program.")
+                    break
+                else:
+                    print("Invalid choice. Please try again.")
+            except Exception as e:
+                print("Error:", e)
+
+
+university = University()
+university.menu()
+'''
